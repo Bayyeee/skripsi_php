@@ -49,7 +49,7 @@
         <?php
         // Start MySQL connection
         include('db_koneksi.php');
-        
+
         // Retrieve all records and display them
         $result = $conn->query("SELECT * FROM sensor ORDER BY id_sensor ASC");
 
@@ -78,11 +78,35 @@
 
     <div style="margin-top: 10px;">
         <a href="json_api.php" style="text-decoration: none;">
-            <button type="button" style="cursor: pointer; background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px;">Log Json</button>
+            <button type="button"
+                style="cursor: pointer; background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px;">Log
+                Json</button>
         </a>
     </div>
 
+    <?php
+    include('db_koneksi.php'); // Pastikan koneksi ke database
     
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $relay_status = $_POST["relay_status"]; // Menerima data dari tombol
+        $update_query = "UPDATE control_relay SET relay2_status = '$relay_status' WHERE id = 1";
+        if ($conn->query($update_query) === TRUE) {
+            echo "<script>alert('Relay berhasil diperbarui!');</script>";
+        } else {
+            echo "Error: " . $conn->error;
+        }
+    }
+    ?>
+
+    <div style="margin-top: 20px;">
+        <form method="POST">
+            <button type="submit" name="relay_status" value="ON"
+                style="background-color: green; color: white; padding: 10px; border-radius: 5px;">Nyalakan Relay
+                2</button>
+            <button type="submit" name="relay_status" value="OFF"
+                style="background-color: red; color: white; padding: 10px; border-radius: 5px;">Matikan Relay 2</button>
+        </form>
+    </div>
 
 </body>
 
