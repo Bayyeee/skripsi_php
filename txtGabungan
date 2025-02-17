@@ -1,0 +1,88 @@
+<?php
+include('db_koneksi.php');
+header('Content-Type: application/json');
+
+$response = array();
+
+if (!isset($_GET['mode'])) {
+    echo json_encode(["error" => "Parameter 'mode' diperlukan"]);
+    exit;
+}
+
+$mode = $_GET['mode'];
+
+if ($mode === "data") {
+    // API untuk menampilkan hasil alat
+    $query = "
+        SELECT 
+            h.id_hasil,
+            s.analog_value, 
+            s.timestamp, 
+            p.voltage AS hasil_perhitungan, 
+            k.keputusan
+        FROM hasil h
+        JOIN sensor_perhitungan p ON h.id_perhitungan = p.id_perhitungan
+        JOIN sensor s ON p.id_sensor = s.id_sensor
+        JOIN keputusan k ON h.id_keputusan = k.id_keputusan
+        ORDER BY h.id_hasil ASC
+    ";
+
+    $result = $conn->query($query);
+
+    if ($result->num_rows > 0) {
+        $response['data'] = array();
+        while ($row = $result->fetch_assoc()) {
+            $data = array(
+                "id_hasil" => $row['id_hasil'],
+                "analog_value" => $row['analog_value'], 
+                "timestamp" => $row['timestamp'], 
+                "hasil_perhitungan" => $row['hasil_perhitungan'], 
+                "keputusan" => $row['keputusan'], 
+                "relay1_status" => ($row['keputusan'] === "Bahaya") ? "ON" : "OFF" 
+            );
+            array_push($response['data'], $data);
+        }
+    } else {
+        $response['error'] = "Data tidak ditemukan";
+    }
+
+} elseif ($mode === "control") {
+    // API untuk mengontrol relay
+    $queryRelay2 = "SELECT relay2_status FROM control_relay WHERE id = 1";
+    $resultRelay2 = $conn->query($queryRelay2);
+
+    if ($resultRelay2->num_rows > 0) {
+        $rowRelay2 = $resultRelay2->fetch_assoc();
+        $response['relay2_status'] = $rowRelay2['relay2_status'];
+    } else {
+        $response['relay2_status'] = "unknown"; // Jika tidak ada data
+    }
+
+    $queryRelay1 = "
+        SELECT k.keputusan 
+        FROM hasil h
+        JOIN keputusan k ON h.id_keputusan = k.id_keputusan
+        ORDER BY h.id_hasil DESC 
+        LIMIT 1
+    ";
+
+    $resultRelay1 = $conn->query($queryRelay1);
+
+    if ($resultRelay1->num_rows > 0) {
+        $rowRelay1 = $resultRelay1->fetch_assoc();
+        $response['keputusan'] = $rowRelay1['keputusan'];
+
+        // Menentukan tindakan berdasarkan keputusan
+        $response['relay1_status'] = ($rowRelay1['keputusan'] === "Bahaya") ? "ON" : "OFF";
+    } else {
+        $response['keputusan'] = "unknown";
+        $response['relay1_status'] = "unknown";
+    }
+
+} else {
+    $response['error'] = "Mode tidak valid! Gunakan 'data' atau 'control'";
+}
+
+echo json_encode($response, JSON_PRETTY_PRINT);
+$conn->close();
+?>
