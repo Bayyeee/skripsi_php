@@ -51,7 +51,7 @@
         include('db_koneksi.php');
 
         // Retrieve all records and display them
-        $result = $conn->query("SELECT * FROM sensor ORDER BY id_sensor ASC");
+        $result = $conn->query("SELECT * FROM sensor ORDER BY id_sensor DESC LIMIT 10");
 
         // Used for row color toggle
         $oddrow = true;
@@ -81,6 +81,10 @@
             <button type="button"
                 style="cursor: pointer; background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px;">Log
                 Json</button>
+        </a>
+        <a href="get_api.php">
+            <button type="submit" name="relay_status" value="OFF"
+                style="background-color: red; color: white; padding: 10px; border-radius: 5px;">get data api</button>
         </a>
     </div>
 

@@ -11,7 +11,7 @@ if ($resultRelay2->num_rows > 0) {
     $rowRelay2 = $resultRelay2->fetch_assoc();
     $response['relay2_status'] = $rowRelay2['relay2_status'];
 } else {
-    $response['relay2_status'] = "unknown"; // Jika tidak ada data
+    $response['relay2_status'] = "unknown"; 
 }
 
 // Ambil keputusan terbaru untuk relay 1 dari tabel hasil & keputusan
