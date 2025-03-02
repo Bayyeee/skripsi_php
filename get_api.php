@@ -9,6 +9,9 @@ header('Content-Type: application/json');
 $response = array();
 $response['data'] = array();
 
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;  
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0; 
+
 $query = "
     SELECT 
         h.id_hasil,
@@ -20,11 +23,11 @@ $query = "
     JOIN sensor_perhitungan p ON h.id_perhitungan = p.id_perhitungan
     JOIN sensor s ON p.id_sensor = s.id_sensor
     JOIN keputusan k ON h.id_keputusan = k.id_keputusan
-    ORDER BY h.id_hasil ASC
+    ORDER BY h.id_hasil DESC
+    LIMIT $limit OFFSET $offset
 ";
 
 $result = $conn->query($query);
-
 
 if (!$result) {
     die(json_encode(["error" => "Query error: " . $conn->error]));
@@ -38,7 +41,7 @@ if ($result->num_rows > 0) {
             "timestamp" => $row['timestamp'], 
             "hasil_perhitungan" => $row['hasil_perhitungan'], 
             "keputusan" => $row['keputusan'], 
-            "relay1_status" => ($row['keputusan'] === "Bahaya") ? "ON" : "OFF" 
+            "relay1_status" => ($row['keputusan'] === "Bahaya") ? "ON" : "OFF"
         );
         array_push($response['data'], $data);
     }

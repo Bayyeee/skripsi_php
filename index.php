@@ -77,10 +77,9 @@
     </table>
 
     <div style="margin-top: 10px;">
-        <a href="json_api.php" style="text-decoration: none;">
+        <a href="controller_api.php" style="text-decoration: none;">
             <button type="button"
-                style="cursor: pointer; background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px;">Log
-                Json</button>
+                style="cursor: pointer; background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px;">api controller alat</button>
         </a>
         <a href="get_api.php">
             <button type="submit" name="relay_status" value="OFF"
