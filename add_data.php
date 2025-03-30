@@ -17,8 +17,8 @@ function simpanPerhitungan($conn, $id_sensor, $analog_value) {
     $VREF = 3.3;
     $voltage = ($analog_value / $ADC_MAX) * $VREF;
 
-    $stmt = $conn->prepare("INSERT INTO sensor_perhitungan (id_sensor, analog_value, voltage) VALUES (?, ?, ?)");
-    $stmt->bind_param("iid", $id_sensor, $analog_value, $voltage);
+    $stmt = $conn->prepare("INSERT INTO sensor_perhitungan (id_sensor, voltage) VALUES (?, ?)");
+    $stmt->bind_param("id", $id_sensor, $voltage);
     if ($stmt->execute()) {
         return [$conn->insert_id, $voltage];
     }
@@ -46,7 +46,6 @@ function tentukanKeputusan($voltage) {
         return "Aman";
     }
 }
-
 
 // Function untuk menyimpan hasil akhir ke tabel hasil
 function simpanHasil($conn, $id_perhitungan, $id_keputusan) {
