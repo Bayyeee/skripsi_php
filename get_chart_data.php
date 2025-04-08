@@ -7,7 +7,7 @@ $query = "SELECT timestamp, analog_value, voltage
     JOIN sensor_perhitungan ON sensor.id_sensor = sensor_perhitungan.id_sensor 
     WHERE DATE(timestamp) = CURDATE() 
     ORDER BY timestamp DESC 
-    LIMIT 500";
+    LIMIT 100";
 $result = $conn->query($query);
 
 $data = array();

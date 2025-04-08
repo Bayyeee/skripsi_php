@@ -2,6 +2,7 @@
 
 <head>
     <title>Log Data Sensor</title>
+    <meta http-equiv="refresh" content="60">
     <style type="text/css">
         .table_titles,
         .table_cells_odd,
