@@ -174,7 +174,11 @@
             <button type="submit" name="relay_status" value="OFF"
                 style="background-color: red; color: white; padding: 10px; border-radius: 5px;">get data api</button>
         </a>
-    </div>
+        <a href="update_relay2_api.php">
+        <button type="button"
+                style="cursor: pointer; background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px;">api relay status</button>
+        </a>
+    </>
 
     <?php
     include('db_koneksi.php'); // Pastikan koneksi ke database
